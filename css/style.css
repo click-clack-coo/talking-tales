@@ -1,3 +1,9 @@
+html {
+    --ink: hsla(0, 0%, 100%);
+    --bg-their: hsla(212, 80%, 48%);
+    --bg-our: hsla(1, 80%, 48%);
+}
+
 .gap-8 {
     gap: 8px;
 }
@@ -39,9 +45,30 @@ main {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 #preview li {
-    padding: 0;
+    padding: 8px 10px;
+    border-radius: 24px 8px;
     margin: 0;
+    color: var(--ink);
+    max-width: 80%;
+}
+
+li.our {
+    align-self: flex-start;
+    background: var(--bg-our);
+}
+
+li.their {
+    align-self: flex-end;
+    background: var(--bg-their);
+}
+
+#preview li img,
+#preview li video {
+    max-width: 80%;
+    height: auto;
 }

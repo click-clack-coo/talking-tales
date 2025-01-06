@@ -32,22 +32,30 @@
     // Restore cursor position
     const newCursorPos = start + (hasTab ? -1 : 1);
     textarea.setSelectionRange(newCursorPos, newCursorPos);
+    updatePreview(textarea);
   }
 
   function handleDrop(file) {
     const url = URL.createObjectURL(file);
     const fileType = file.type.split("/")[0];
-    const msg = `${fileType}(${url})`;
+    const msg = `[${fileType}]: ${url}`;
 
     const textarea = document.querySelector("textarea");
     const cursorPos = textarea.selectionStart;
-    const textBefore = textarea.value.substring(0, cursorPos);
-    const textAfter = textarea.value.substring(cursorPos);
+    const value = textarea.value;
 
-    textarea.value = textBefore + msg + textAfter;
+    // Find the start of the current line
+    const lineStart = value.lastIndexOf("\n", cursorPos - 1) + 1;
 
-    // Move cursor after inserted text
-    const newCursorPos = cursorPos + msg.length;
+    // Insert msg on a new line before the current line
+    const textBefore = value.substring(0, lineStart);
+    const textAfter = value.substring(lineStart);
+
+    // biome-ignore lint: this is more clear
+    textarea.value = textBefore + msg + "\n" + textAfter;
+
+    // Move cursor to the end of the inserted line
+    const newCursorPos = lineStart + msg.length + 1;
     textarea.setSelectionRange(newCursorPos, newCursorPos);
   }
 
@@ -80,7 +88,23 @@
     const rawMessages = text.split("\n");
     for (const raw of rawMessages) {
       const msg = document.createElement("li");
-      msg.innerText = raw;
+      msg.className = raw.startsWith("\t") ? "their" : "our";
+      const match = raw.match(/^\[(image|video)]: (blob:.+)$/);
+      if (match) {
+        const [, type, url] = match;
+        if (type === "image") {
+          const img = document.createElement("img");
+          img.src = url;
+          msg.appendChild(img);
+        } else if (type === "video") {
+          const video = document.createElement("video");
+          video.src = url;
+          video.controls = true;
+          msg.appendChild(video);
+        }
+      } else {
+        msg.innerText = raw;
+      }
       preview.appendChild(msg);
     }
     return preview;
