@@ -2,8 +2,46 @@
     gap: 8px;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    min-height: 100svh;
+    box-sizing: border-box;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-basis-50percent {
+    flex-basis: 50%;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.media-800-flex {
+    display: flex;
+    flex-direction: column;
+}
+
 @media screen and (min-width: 800px) {
     .media-800-flex {
-        display: flex;
+        flex-direction: row;
     }
+}
+
+#preview {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#preview li {
+    padding: 0;
+    margin: 0;
 }

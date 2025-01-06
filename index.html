@@ -12,8 +12,11 @@
       <textarea
         onkeydown="App.handleTab(event)"
         oninput="App.updatePreview(this)"
+        class="flex-grow flex-basis-50percent"
       ></textarea>
-      <div id="preview"></div>
+      <div class="flex-grow flex-basis-50percent">
+        <ul id="preview"></ul>
+      </div>
     </main>
   </body>
 </html>
