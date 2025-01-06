@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Talking Tales</title>
+    <link href="css/style.css" rel="stylesheet" />
+    <script src="js/app.js"></script>
+  </head>
+  <body>
+    <main class="media-800-flex gap-8">
+      <textarea
+        onkeydown="App.handleTab(event)"
+        oninput="App.updatePreview(this)"
+      ></textarea>
+      <div id="preview"></div>
+    </main>
+  </body>
+</html>
