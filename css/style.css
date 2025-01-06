@@ -1,5 +1,7 @@
 html {
+    --bg-base: hsla(212, 0%, 90%);
     --ink: hsla(0, 0%, 100%);
+    --base: hsla(0, 0%, 100%);
     --bg-their: hsla(212, 80%, 48%);
     --bg-our: hsla(1, 80%, 48%);
 }
@@ -41,34 +43,51 @@ main {
     }
 }
 
+.bg-base {
+    background: var(--bg-base);
+}
+
 #preview {
+    border-radius: 32px;
+    background: var(--base);
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 32px auto;
+    max-width: 400px;
     display: flex;
+    gap: 6px;
     flex-direction: column;
 }
 
 #preview li {
     padding: 8px 10px;
-    border-radius: 24px 8px;
     margin: 0;
     color: var(--ink);
-    max-width: 80%;
+    max-width: 75%;
+}
+
+#preview li.media {
+    line-height: 1;
+    padding: 0;
+    overflow: clip;
+    max-width: 75%;
 }
 
 li.our {
+    border-radius: 36px 12px 32px;
     align-self: flex-start;
     background: var(--bg-our);
 }
 
 li.their {
+    border-radius: 32px 12px 32px 20px;
     align-self: flex-end;
     background: var(--bg-their);
 }
 
 #preview li img,
 #preview li video {
-    max-width: 80%;
-    height: auto;
+    display: block;
+    object-fit: scale-down;
+    width: 100%;
 }
