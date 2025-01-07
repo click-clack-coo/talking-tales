@@ -15,7 +15,28 @@
         class="flex-grow flex-basis-50percent"
       ></textarea>
       <div class="flex-grow flex-basis-50percent bg-base">
-        <ul id="preview"></ul>
+        <div class="mobile flex-column gap-16">
+          <nav class="flex-row width-100percent gap-20">
+            <button type="button" class="circle-44">←</button>
+            <button type="button" class="circle-44" onclick="App.pickAvatar()">
+              <img src="img/cat.jpg" alt="avatar" class="avatar" />
+            </button>
+            <div class="flex-grow">
+              <div>
+                <strong>Unknown</strong>
+              </div>
+              <div><span style="color: green">⋅</span> feeling active</div>
+            </div>
+            <button type="button" class="circle-44">…</button>
+          </nav>
+          <ul id="preview"></ul>
+          <div class="flex-row gap-16">
+            <input type="text" placeholder="Type a message…" />
+            <button type="button" class="cicle-44">
+              <i class="icon-heart"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </main>
   </body>
