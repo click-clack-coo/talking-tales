@@ -116,10 +116,21 @@
     const preview = getPreview(textarea.value);
     const existing = document.getElementById("preview");
     existing.replaceWith(preview);
+    // save state in browser cache
+    localStorage.setItem("chat-state", textarea.value);
   }
 
   function main() {
     addDropListeners();
+
+    // Restore saved state on load
+    const textarea = document.querySelector("textarea");
+    const savedState = localStorage.getItem("chat-state");
+    if (savedState) {
+      textarea.value = savedState;
+      updatePreview(textarea);
+    }
+
     window.App = {
       handleTab: handleTab,
       updatePreview: updatePreview,
