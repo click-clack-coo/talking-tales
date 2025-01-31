@@ -1,4 +1,50 @@
 (() => {
+  let db;
+
+  // Initialize IndexedDB
+  function initDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open("ChatDB", 1);
+
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        db = request.result;
+        resolve(db);
+      };
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("media")) {
+          db.createObjectStore("media", { keyPath: "id" });
+        }
+      };
+    });
+  }
+
+  // Store media in IndexedDB
+  async function storeMedia(id, blob) {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(["media"], "readwrite");
+      const store = transaction.objectStore("media");
+      const request = store.put({ id, blob });
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Get media from IndexedDB
+  async function getMedia(id) {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(["media"], "readonly");
+      const store = transaction.objectStore("media");
+      const request = store.get(id);
+
+      request.onsuccess = () => resolve(request.result?.blob);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
   function handleTab(event) {
     if (event.key !== "Tab") return;
 
@@ -35,10 +81,11 @@
     updatePreview(textarea);
   }
 
-  function handleDrop(file) {
-    const url = URL.createObjectURL(file);
+  async function handleDrop(file) {
     const fileType = file.type.split("/")[0];
-    const msg = `[${fileType}]: ${url}`;
+    const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    await storeMedia(id, file);
+    const msg = `[${fileType}]: ${id}`;
 
     const textarea = document.querySelector("textarea");
     const cursorPos = textarea.selectionStart;
@@ -81,7 +128,7 @@
     });
   }
 
-  function getPreview(text) {
+  async function getPreview(text) {
     const preview = document.createElement("ul");
     preview.id = "preview";
 
@@ -90,19 +137,23 @@
       if (!raw.trim()) continue;
       const msg = document.createElement("li");
       msg.className = raw.startsWith("\t") ? "their" : "our";
-      const match = raw.match(/^\[(image|video)]: (blob:.+)$/);
+      const match = raw.match(/^\[(image|video)]: (.+)$/);
       if (match) {
         msg.classList.add("media");
-        const [, type, url] = match;
-        if (type === "image") {
-          const img = document.createElement("img");
-          img.src = url;
-          msg.appendChild(img);
-        } else if (type === "video") {
-          const video = document.createElement("video");
-          video.src = url;
-          video.controls = true;
-          msg.appendChild(video);
+        const [, type, id] = match;
+        const blob = await getMedia(id);
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          if (type === "image") {
+            const img = document.createElement("img");
+            img.src = url;
+            msg.appendChild(img);
+          } else if (type === "video") {
+            const video = document.createElement("video");
+            video.src = url;
+            video.controls = true;
+            msg.appendChild(video);
+          }
         }
       } else {
         msg.innerText = raw;
@@ -112,15 +163,16 @@
     return preview;
   }
 
-  function updatePreview(textarea) {
-    const preview = getPreview(textarea.value);
+  async function updatePreview(textarea) {
+    const preview = await getPreview(textarea.value);
     const existing = document.getElementById("preview");
     existing.replaceWith(preview);
     // save state in browser cache
     localStorage.setItem("chat-state", textarea.value);
   }
 
-  function main() {
+  async function main() {
+    await initDB();
     addDropListeners();
 
     // Restore saved state on load
@@ -128,7 +180,7 @@
     const savedState = localStorage.getItem("chat-state");
     if (savedState) {
       textarea.value = savedState;
-      updatePreview(textarea);
+      await updatePreview(textarea);
     }
 
     window.App = {
