@@ -1,147 +1,168 @@
 html {
-  --bg-base: hsla(212, 0%, 90%);
-  --ink: hsla(0, 0%, 100%);
-  --base: hsla(0, 0%, 100%);
-  --bg-their: hsla(212, 80%, 48%);
-  --bg-our: hsla(1, 80%, 48%);
-  --border: hsla(202, 4%, 90%);
-  --input-border: hsla(202, 4%, 46%);
+    --bg-base: hsla(212, 0%, 90%);
+    --ink: hsla(212, 20%, 20%);
+    --ink-700: hsla(212, 20%, 60%);
+    --base: hsla(212, 0%, 100%);
+
+    --ink-their: hsla(212, 60%, 98%);
+    --bg-their: hsla(212, 80%, 48%);
+
+    --ink-our: hsla(1, 50%, 99%);
+    --bg-our: hsla(1, 80%, 48%);
+    --border: hsla(212, 4%, 90%);
+    --input-border: hsla(212, 4%, 46%);
+}
+
+.ink-700 {
+    color: var(--ink-700);
 }
 
 .gap-8 {
-  gap: 8px;
+    gap: 8px;
 }
 
 .gap-16 {
-  gap: 16px;
+    gap: 16px;
 }
 
 .gap-20 {
-  gap: 20px;
+    gap: 20px;
 }
 
 body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+strong,
+b,
+.strong {
+    font-weight: 600;
 }
 
 main {
-  min-height: 100svh;
-  box-sizing: border-box;
+    min-height: 100svh;
+    box-sizing: border-box;
 }
 
 button {
-  border: 1px solid var(--border);
-  background: var(--base);
-  cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--base);
+    cursor: pointer;
 }
 
 input {
-  line-height: 1;
-  padding: 12px 20px;
-  border: 1.5px solid var(--input-border);
-  border-radius: 32px;
+    line-height: 1;
+    padding: 12px 20px;
+    border: 1.5px solid var(--input-border);
+    border-radius: 32px;
 }
 
 .circle-44 {
-  padding: 0;
-  overflow: clip;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  line-height: 1;
+    padding: 0;
+    overflow: clip;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    line-height: 1;
 }
 
 .flex-row {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .flex-column {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .flex-basis-50percent {
-  flex-basis: 50%;
+    flex-basis: 50%;
 }
 
 .flex-grow {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .width-100percent {
-  width: 100%;
-  box-sizing: border-box;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .media-800-flex {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 @media screen and (min-width: 800px) {
-  .media-800-flex {
-    flex-direction: row;
-  }
+    .media-800-flex {
+        flex-direction: row;
+    }
 }
 
 .bg-base {
-  background: var(--bg-base);
+    background: var(--bg-base);
 }
 
 .mobile {
-  padding: 16px;
-  border-radius: 32px;
-  background: var(--base);
-  margin: 32px auto;
-  max-width: 400px;
-  box-sizing: border-box;
+    padding: 16px;
+    border-radius: 32px;
+    background: var(--base);
+    margin: 32px auto;
+    max-width: 400px;
+    box-sizing: border-box;
 }
 
 ul#preview {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 6px;
-  flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 6px;
+    flex-direction: column;
 }
 
 #preview li {
-  padding: 8px 10px;
-  margin: 0;
-  color: var(--ink);
-  max-width: 75%;
+    padding: 8px 10px;
+    margin: 0;
+    max-width: 75%;
 }
 
 #preview li.media {
-  line-height: 1;
-  padding: 0;
-  overflow: clip;
-  max-width: 75%;
+    line-height: 1;
+    padding: 0;
+    overflow: clip;
+    max-width: 75%;
 }
 
 li.our {
-  border-radius: 36px 12px 32px;
-  align-self: flex-start;
-  background: var(--bg-our);
+    border-radius: 36px 12px 32px;
+    align-self: flex-start;
+    background: var(--bg-our);
+    color: var(--ink-our);
 }
 
 li.their {
-  border-radius: 32px 12px 32px 20px;
-  align-self: flex-end;
-  background: var(--bg-their);
+    border-radius: 32px 12px 32px 20px;
+    align-self: flex-end;
+    background: var(--bg-their);
+    color: var(--ink-their);
 }
 
 #preview li img,
 #preview li video {
-  display: block;
-  object-fit: scale-down;
-  width: 100%;
+    display: block;
+    object-fit: scale-down;
+    width: 100%;
 }
 
 .avatar {
-  object-fit: cover;
-  width: 100%;
+    object-fit: cover;
+    width: 100%;
 }
