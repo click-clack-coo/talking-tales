@@ -1,22 +1,58 @@
-html {
+/* defaults */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
     --bg-base: hsla(212, 0%, 90%);
-    --ink: hsla(212, 20%, 20%);
-    --ink-700: hsla(212, 20%, 60%);
+    --ink: hsla(1, 80%, 47%);
+    --ink-700: hsla(212, 3%, 46%);
     --base: hsla(212, 0%, 100%);
 
     --ink-their: hsla(212, 60%, 98%);
     --bg-their: hsla(212, 80%, 48%);
 
+    --cta: hsla(212, 7%, 20%);
+    --online: hsla(125, 60%, 70%);
+
     --ink-our: hsla(1, 50%, 99%);
     --bg-our: hsla(1, 80%, 48%);
     --border: hsla(212, 4%, 90%);
     --input-border: hsla(212, 4%, 46%);
+    /*set base size as 10px*/
+    font-size: 0.625em;
 }
 
-.ink-700 {
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+.ink-700,
+.mute {
     color: var(--ink-700);
 }
 
+.online {
+    color: var(--online);
+}
+
+.gap-2 {
+    gap: 2px;
+}
 .gap-8 {
     gap: 8px;
 }
@@ -37,12 +73,41 @@ body {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    font-size: 1.6rem;
 }
 
 strong,
 b,
 .strong {
     font-weight: 600;
+}
+
+.font-weight-500 {
+    font-weight: 500;
+}
+
+.larger {
+    font-size: 1.2em;
+}
+
+.smaller {
+    font-size: 0.8em;
+}
+
+.font-size-12 {
+    font-size: 1.2rem;
+}
+
+.font-size-14 {
+    font-size: 1.4rem;
+}
+
+.font-size-16 {
+    font-size: 1.6rem;
+}
+
+.font-size-24 {
+    font-size: 2.4rem;
 }
 
 main {
@@ -53,6 +118,13 @@ main {
 button {
     border: 1px solid var(--border);
     background: var(--base);
+    cursor: pointer;
+}
+
+button.cta {
+    border: 1px solid var(--cta);
+    background: var(--cta);
+    color: var(--base);
     cursor: pointer;
 }
 
@@ -90,6 +162,15 @@ input {
     flex-grow: 1;
 }
 
+.flex-align-center {
+    align-items: center;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
 .width-100percent {
     width: 100%;
     box-sizing: border-box;
@@ -114,18 +195,26 @@ input {
     padding: 16px;
     border-radius: 32px;
     background: var(--base);
-    margin: 32px auto;
     max-width: 400px;
     box-sizing: border-box;
+    margin: 32px;
+    max-height: calc(100% - 64px);
+}
+
+[class^="icon-"].margin-0:before,
+[class*=" icon-"].margin-0:before {
+    margin: 0;
 }
 
 ul#preview {
+    flex-grow: 1;
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     gap: 6px;
     flex-direction: column;
+    overflow: auto;
 }
 
 #preview li {

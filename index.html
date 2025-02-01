@@ -14,39 +14,52 @@
     <link href="css/style.css" rel="stylesheet" />
   </head>
   <body>
-    <main class="media-800-flex gap-8">
+    <main class="media-800-flex gap-8" style="height: 100vh">
       <textarea
         onkeydown="App.handleTab(event)"
         oninput="App.updatePreview(this)"
         class="flex-grow flex-basis-50percent"
       ></textarea>
-      <div class="flex-grow flex-basis-50percent bg-base">
+      <div class="flex-grow flex-basis-50percent bg-base flex-center">
         <div class="mobile flex-column gap-16">
-          <nav class="flex-row width-100percent gap-20">
-            <button type="button" class="circle-44">←</button>
+          <nav class="flex-row width-100percent gap-20 flex-align-center">
+            <button
+              type="button"
+              class="circle-44 icon-left larger mute"
+            ></button>
             <button type="button" class="circle-44" onclick="App.pickAvatar()">
               <img src="img/cat.jpg" alt="avatar" class="avatar" />
             </button>
-            <div class="flex-grow">
-              <div>
+            <div class="flex-grow flex-column gap-2">
+              <div class="font-size-14">
                 <strong>Unknown</strong>
               </div>
-              <div><span style="color: green">⋅</span> feeling active</div>
+              <div class="font-size-12 font-weight-500">
+                <i class="icon-dot larger online margin-0"></i>
+                Feeling Active
+              </div>
             </div>
-            <button type="button" class="circle-44">…</button>
+            <button
+              type="button"
+              class="circle-44 icon-menu larger mute"
+            ></button>
           </nav>
           <ul id="preview"></ul>
           <div class="flex-row gap-16">
-            <input type="text" placeholder="Type a message…" />
+            <input
+              class="flex-grow font-size-14"
+              type="text"
+              placeholder="Type a message…"
+            />
             <button
               type="button"
               class="ink-700"
               style="margin-left: -56px; border: none; background: transparent"
             >
-              <i class="icon-image" style="font-size: 1.6em"></i>
+              <i class="icon-image"></i>
             </button>
-            <button type="button" class="circle-44">
-              <i class="icon-send" style="font-size: 2.8em"></i>
+            <button type="button" class="circle-44 cta">
+              <i class="icon-send font-size-24"></i>
             </button>
           </div>
         </div>

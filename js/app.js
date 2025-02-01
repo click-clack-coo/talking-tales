@@ -133,10 +133,11 @@
     preview.id = "preview";
 
     const rawMessages = text.split("\n");
-    for (const raw of rawMessages) {
+    for (let raw of rawMessages) {
       if (!raw.trim()) continue;
       const msg = document.createElement("li");
       msg.className = raw.startsWith("\t") ? "their" : "our";
+      raw = raw.trim();
       const match = raw.match(/^\[(image|video)]: (.+)$/);
       if (match) {
         msg.classList.add("media");
