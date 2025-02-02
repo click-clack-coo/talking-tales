@@ -116,42 +116,66 @@
     }
   }
 
-  async function importChat(file) {
-    try {
-      const text = await file.text();
-      const importData = JSON.parse(text);
-
-      if (!importData.version || !importData.messages || !importData.media) {
-        throw new Error("Invalid backup file format");
-      }
-
-      // Clear existing data
-      localStorage.removeItem("chat-state");
-      const transaction = db.transaction(["media"], "readwrite");
-      const store = transaction.objectStore("media");
-      await new Promise((resolve, reject) => {
-        const request = store.clear();
-        request.onsuccess = resolve;
-        request.onerror = reject;
-      });
-
-      // Import messages
-      const textarea = document.querySelector("textarea");
-      textarea.value = importData.messages;
-      localStorage.setItem("chat-state", importData.messages);
-
-      // Import media
-      for (const item of importData.media) {
-        const blob = base64ToBlob(item.data, item.type);
-        await storeMedia(item.id, blob);
-      }
-
-      await updatePreview(textarea);
-      alert("Chat backup restored successfully");
-    } catch (error) {
-      console.error("Error importing chat:", error);
-      alert("Failed to import chat backup");
+  async function importChatFromJSON(importData) {
+    if (!importData.version || !importData.messages || !importData.media) {
+      throw new Error("Invalid backup file format");
     }
+
+    // Clear existing data
+    localStorage.removeItem("chat-state");
+    const transaction = db.transaction(["media"], "readwrite");
+    const store = transaction.objectStore("media");
+    await new Promise((resolve, reject) => {
+      const request = store.clear();
+      request.onsuccess = resolve;
+      request.onerror = reject;
+    });
+
+    // Import messages
+    const textarea = document.querySelector("textarea");
+    textarea.value = importData.messages;
+    localStorage.setItem("chat-state", importData.messages);
+
+    // Import media
+    for (const item of importData.media) {
+      const blob = base64ToBlob(item.data, item.type);
+      await storeMedia(item.id, blob);
+    }
+
+    await updatePreview(textarea);
+  }
+
+  async function importDefaultChat() {
+    try {
+      const response = await fetch("intro.json");
+      if (response.ok) {
+        const data = await response.json();
+        importChatFromJSON(data);
+      }
+    } catch (error) {
+      console.error("Error loading intro.json:", error);
+    }
+  }
+
+  async function importChat() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = async (e) => {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          importChatFromJSON(data);
+          alert("Chat backup restored successfully");
+        } catch (error) {
+          console.error("Error importing chat:", error);
+          alert("Failed to import chat backup");
+        }
+      }
+    };
+    input.click();
   }
 
   function handleTab(event) {
@@ -320,22 +344,17 @@
       await updatePreview(textarea);
     }
 
+    // load default chat if empty
+    if (!textarea.value) {
+      importDefaultChat();
+    }
+
     window.App = {
       handleTab: handleTab,
       updatePreview: updatePreview,
       clearChat: clearChat,
       saveChat: saveChat,
-      importChat: () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".json";
-        input.onchange = (e) => {
-          if (e.target.files.length > 0) {
-            importChat(e.target.files[0]);
-          }
-        };
-        input.click();
-      },
+      importChat: importChat,
     };
   }
   main();
