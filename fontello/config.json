@@ -75,6 +75,24 @@
       "search": [
         "dot"
       ]
+    },
+    {
+      "uid": "f4445feb55521283572ee88bc304f928",
+      "css": "save",
+      "code": 59398,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "eeec3208c90b7b48e804919d0d2d4a41",
+      "css": "import",
+      "code": 59405,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "da0fd38d651815e3a12f6c030ff1fe5b",
+      "css": "new",
+      "code": 59394,
+      "src": "entypo"
     }
   ]
 }

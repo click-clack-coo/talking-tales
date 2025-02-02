@@ -14,12 +14,28 @@
     <link href="css/style.css" rel="stylesheet" />
   </head>
   <body>
-    <main class="media-800-flex gap-8" style="height: 100vh">
-      <textarea
-        onkeydown="App.handleTab(event)"
-        oninput="App.updatePreview(this)"
-        class="flex-grow flex-basis-50percent"
-      ></textarea>
+    <main class="media-800-flex" style="height: 100vh">
+      <div class="flex-grow flex-basis-50percent flex-column">
+        <div class="flex-row">
+          <button type="button" onclick="App.clearChat()">
+            <i class="icon-new"></i>
+            New
+          </button>
+          <button type="button" onclick="App.saveChat()">
+            <i class="icon-save"></i>
+            Save
+          </button>
+          <button type="button" onclick="App.importChat()">
+            <i class="icon-import"></i>
+            Import
+          </button>
+        </div>
+        <textarea
+          class="flex-grow"
+          onkeydown="App.handleTab(event)"
+          oninput="App.updatePreview(this)"
+        ></textarea>
+      </div>
       <div class="flex-grow flex-basis-50percent bg-base flex-row flex-center">
         <div class="mobile flex-column gap-16">
           <nav class="flex-row width-100percent gap-20 flex-align-center">

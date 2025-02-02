@@ -45,6 +45,115 @@
     });
   }
 
+  // Get all media from IndexedDB
+  async function getAllMedia() {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(["media"], "readonly");
+      const store = transaction.objectStore("media");
+      const request = store.getAll();
+
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Convert Blob to Base64
+  function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // Convert Base64 to Blob
+  function base64ToBlob(base64, type) {
+    const binStr = atob(base64);
+    const len = binStr.length;
+    const arr = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      arr[i] = binStr.charCodeAt(i);
+    }
+    return new Blob([arr], { type });
+  }
+
+  async function saveChat() {
+    try {
+      const messages = document.querySelector("textarea").value;
+      const mediaItems = await getAllMedia();
+
+      // Convert blobs to base64
+      const mediaWithBase64 = await Promise.all(
+        mediaItems.map(async (item) => ({
+          id: item.id,
+          type: item.blob.type,
+          data: await blobToBase64(item.blob),
+        })),
+      );
+
+      const exportData = {
+        version: 1,
+        messages,
+        media: mediaWithBase64,
+      };
+
+      // Create and download the file
+      const blob = new Blob([JSON.stringify(exportData)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `chat-backup-${new Date().toISOString().split("T")[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error saving chat:", error);
+      alert("Failed to save chat backup");
+    }
+  }
+
+  async function importChat(file) {
+    try {
+      const text = await file.text();
+      const importData = JSON.parse(text);
+
+      if (!importData.version || !importData.messages || !importData.media) {
+        throw new Error("Invalid backup file format");
+      }
+
+      // Clear existing data
+      localStorage.removeItem("chat-state");
+      const transaction = db.transaction(["media"], "readwrite");
+      const store = transaction.objectStore("media");
+      await new Promise((resolve, reject) => {
+        const request = store.clear();
+        request.onsuccess = resolve;
+        request.onerror = reject;
+      });
+
+      // Import messages
+      const textarea = document.querySelector("textarea");
+      textarea.value = importData.messages;
+      localStorage.setItem("chat-state", importData.messages);
+
+      // Import media
+      for (const item of importData.media) {
+        const blob = base64ToBlob(item.data, item.type);
+        await storeMedia(item.id, blob);
+      }
+
+      await updatePreview(textarea);
+      alert("Chat backup restored successfully");
+    } catch (error) {
+      console.error("Error importing chat:", error);
+      alert("Failed to import chat backup");
+    }
+  }
+
   function handleTab(event) {
     if (event.key !== "Tab") return;
 
@@ -104,6 +213,7 @@
     // Move cursor to the end of the inserted line
     const newCursorPos = lineStart + msg.length + 1;
     textarea.setSelectionRange(newCursorPos, newCursorPos);
+    updatePreview(textarea);
   }
 
   function addDropListeners() {
@@ -172,6 +282,32 @@
     localStorage.setItem("chat-state", textarea.value);
   }
 
+  async function clearChat() {
+    try {
+      // Clear textarea
+      const textarea = document.querySelector("textarea");
+      textarea.value = "";
+
+      // Clear localStorage
+      localStorage.removeItem("chat-state");
+
+      // Clear IndexedDB media store
+      const transaction = db.transaction(["media"], "readwrite");
+      const store = transaction.objectStore("media");
+      await new Promise((resolve, reject) => {
+        const request = store.clear();
+        request.onsuccess = resolve;
+        request.onerror = reject;
+      });
+
+      // Update preview
+      await updatePreview(textarea);
+    } catch (error) {
+      console.error("Error clearing chat:", error);
+      alert("Failed to clear chat");
+    }
+  }
+
   async function main() {
     await initDB();
     addDropListeners();
@@ -187,6 +323,19 @@
     window.App = {
       handleTab: handleTab,
       updatePreview: updatePreview,
+      clearChat: clearChat,
+      saveChat: saveChat,
+      importChat: () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = (e) => {
+          if (e.target.files.length > 0) {
+            importChat(e.target.files[0]);
+          }
+        };
+        input.click();
+      },
     };
   }
   main();
