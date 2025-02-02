@@ -201,7 +201,8 @@ input {
     padding: 16px;
     border-radius: 32px;
     background: var(--base);
-    max-width: 400px;
+    width: 100%;
+    max-width: 380px;
     box-sizing: border-box;
     margin: 32px;
     max-height: calc(100% - 64px);
