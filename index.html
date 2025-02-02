@@ -12,11 +12,16 @@
     />
     <link href="fontello/css/fontello.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
+    <script
+      defer
+      data-domain="click-clack-coo.github.io/talking-tales"
+      src="https://plausible.io/js/script.outbound-links.pageview-props.tagged-events.js"
+    ></script>
   </head>
   <body>
     <main class="media-800-flex" style="height: 100vh">
       <div class="flex-grow flex-basis-50percent flex-column">
-        <div class="flex-row">
+        <nav class="flex-row">
           <button type="button" onclick="App.clearChat()">
             <i class="icon-new"></i>
             New
@@ -29,7 +34,16 @@
             <i class="icon-import"></i>
             Import
           </button>
-        </div>
+          <div class="flex-grow"></div>
+          <a
+            href="http://github.com/click-clack-coo/talking-tales"
+            class="button"
+            target="_blank"
+          >
+            <i class="icon-github"></i>
+            Source
+          </a>
+        </nav>
         <textarea
           class="flex-grow"
           onkeydown="App.handleTab(event)"

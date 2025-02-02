@@ -115,10 +115,16 @@ main {
     box-sizing: border-box;
 }
 
-button {
+button,
+.button {
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--ink);
+    padding: 2px 6px;
     border: 1px solid var(--border);
     background: var(--base);
     cursor: pointer;
+    text-decoration: none;
 }
 
 button.cta {
@@ -238,7 +244,7 @@ li.our {
 }
 
 li.their {
-    border-radius: 32px 12px 32px 20px;
+    border-radius: 24px 8px 32px 8px;
     align-self: flex-end;
     background: var(--bg-their);
     color: var(--ink-their);
