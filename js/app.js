@@ -262,13 +262,15 @@
     });
   }
 
-  function insertTag(tag) {
+  function insertTag(tag, value = "") {
     const textarea = document.querySelector("textarea");
-    const insertion = `\t[${tag}]: \n`;
+    const insertion = `\t[${tag}]: ${value}\n`;
     textarea.value = insertion + textarea.value;
 
-    // Set cursor position after the tag
-    const newCursorPos = tag.length + 5;
+    // update cursor position by
+    const newCursorPos = value
+      ? textarea.selectionStart + insertion.length
+      : insertion.length - 1;
     textarea.focus();
     textarea.setSelectionRange(newCursorPos, newCursorPos);
     updatePreview(textarea);
@@ -422,6 +424,22 @@
       importDefaultChat();
     }
 
+    async function handleAvatarClick() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.onchange = async (e) => {
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+          await storeMedia(id, file);
+
+          insertTag("DP", id);
+        }
+      };
+      input.click();
+    }
+
     window.App = {
       handleTab: handleTab,
       updatePreview: updatePreview,
@@ -429,6 +447,7 @@
       saveChat: saveChat,
       importChat: importChat,
       insertTag: insertTag,
+      handleAvatarClick: handleAvatarClick,
     };
   }
   main();
