@@ -145,6 +145,11 @@ button.cta {
     cursor: pointer;
 }
 
+button:not(.plain):hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
 input {
     line-height: 1;
     padding: 12px 20px;
@@ -159,6 +164,11 @@ input {
     width: 44px;
     height: 44px;
     line-height: 1;
+}
+
+.circle-44:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
 }
 
 .flex-row {
@@ -246,6 +256,13 @@ ul#preview {
     padding: 0;
     overflow-x: clip;
     max-width: 75%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.media img:hover,
+.media video:hover {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
 }
 
 li.emoji {
