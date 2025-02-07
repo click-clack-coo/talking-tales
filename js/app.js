@@ -344,10 +344,19 @@
         }
       } else {
         // Check if the text is a single emoji
-        // This regex matches exactly one emoji (including compound emojis like 👨‍👩‍👧‍👦 or 👨🏻‍💻)
-        const isEmoji =
-          /^(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)(?:\u200D(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F))*$/u;
-        if (isEmoji.test(raw)) {
+        const emojiRegex = new RegExp(
+          "^" +
+            "(\\p{Emoji_Presentation}|\\p{Extended_Pictographic})" + // Base emoji
+            "(" +
+            "\\u200d" + // ZWJ (Zero Width Joiner)
+            "(\\p{Emoji_Presentation}|\\p{Extended_Pictographic})" +
+            ")*" +
+            "[\\uFE0F\\u20E3]*" + // Emoji style variation selector and enclosing keycap
+            "(\\p{EMod})?" + // Emoji Modifier
+            "$",
+          "u",
+        );
+        if (emojiRegex.test(raw)) {
           msg.classList.add("emoji");
         }
         msg.innerText = raw;
