@@ -57,16 +57,34 @@
               type="button"
               class="circle-44 icon-left larger mute"
             ></button>
-            <button type="button" class="circle-44" onclick="App.pickAvatar()">
-              <img src="img/cat.jpg" alt="avatar" class="avatar" />
+            <button
+              type="button"
+              class="circle-44"
+              onclick="App.insertTag('DP')"
+            >
+              <img id="avatar" src="img/cat.jpg" alt="avatar" class="avatar" />
             </button>
             <div class="flex-grow flex-column gap-2">
-              <div class="font-size-14">
-                <strong>Unknown</strong>
+              <div class="font-size-14 strong">
+                <button
+                  type="button"
+                  class="plain"
+                  id="name"
+                  onclick="App.insertTag('name')"
+                >
+                  Unknown
+                </button>
               </div>
               <div class="font-size-12 font-weight-500">
                 <i class="icon-dot larger online margin-0"></i>
-                Feeling Active
+                <button
+                  type="button"
+                  class="plain"
+                  id="status"
+                  onclick="App.insertTag('status')"
+                >
+                  Feeling Active
+                </button>
               </div>
             </div>
             <button

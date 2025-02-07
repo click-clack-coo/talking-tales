@@ -262,33 +262,83 @@
     });
   }
 
+  function insertTag(tag) {
+    const textarea = document.querySelector("textarea");
+    const insertion = `\t[${tag}]: \n`;
+    textarea.value = insertion + textarea.value;
+
+    // Set cursor position after the tag
+    const newCursorPos = tag.length + 5;
+    textarea.focus();
+    textarea.setSelectionRange(newCursorPos, newCursorPos);
+    updatePreview(textarea);
+  }
+
+  function updateName(name) {
+    const nameElement = document.querySelector("#name");
+    nameElement.textContent = name;
+  }
+
+  function updateStatus(status) {
+    const statusElement = document.querySelector("#status");
+    statusElement.textContent = status;
+  }
+
+  function updateAvatar(imageUrl) {
+    const avatarElement = document.querySelector("#avatar");
+    avatarElement.src = imageUrl;
+  }
+
   async function getPreview(text) {
     const preview = document.createElement("ul");
     preview.id = "preview";
 
     const rawMessages = text.split("\n");
     for (let raw of rawMessages) {
-      if (!raw.trim()) continue;
-      const msg = document.createElement("li");
-      msg.className = raw.startsWith("\t") ? "their" : "our";
+      const isTheir = raw.startsWith("\t");
       raw = raw.trim();
-      const match = raw.match(/^\[(image|video)]: (.+)$/);
+      if (!raw) continue;
+      const msg = document.createElement("li");
+      msg.className = isTheir ? "their" : "our";
+      const match = raw.match(/^\[(.+)]: (.+)$/);
       if (match) {
-        msg.classList.add("media");
-        const [, type, id] = match;
-        const blob = await getMedia(id);
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          if (type === "image") {
-            const img = document.createElement("img");
-            img.src = url;
-            msg.appendChild(img);
-          } else if (type === "video") {
-            const video = document.createElement("video");
-            video.src = url;
-            video.controls = true;
-            msg.appendChild(video);
-          }
+        const [_, type, value] = match;
+        let el;
+        let url;
+        switch (type) {
+          case "image":
+            msg.classList.add("media");
+            url = URL.createObjectURL(await getMedia(value));
+            el = document.createElement("img");
+            el.src = url;
+            msg.appendChild(el);
+            break;
+
+          case "video":
+            msg.classList.add("media");
+            url = URL.createObjectURL(await getMedia(value));
+            el = document.createElement("video");
+            el.src = url;
+            el.controls = true;
+            msg.appendChild(el);
+            break;
+
+          case "name":
+            updateName(value);
+            break;
+
+          case "status":
+            url = updateStatus(value);
+            break;
+
+          case "dp":
+          case "DP":
+            url = URL.createObjectURL(await getMedia(value));
+            updateAvatar(url);
+            break;
+
+          default:
+            break;
         }
       } else {
         // Check if the text is a single emoji
@@ -378,6 +428,7 @@
       clearChat: clearChat,
       saveChat: saveChat,
       importChat: importChat,
+      insertTag: insertTag,
     };
   }
   main();
