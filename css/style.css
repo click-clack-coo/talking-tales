@@ -237,6 +237,10 @@ ul#preview {
     max-width: 75%;
 }
 
+li.emoji {
+    font-size: 3.4em;
+}
+
 li.our {
     border-radius: 36px 12px 32px;
     align-self: flex-start;

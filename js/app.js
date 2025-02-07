@@ -291,6 +291,13 @@
           }
         }
       } else {
+        // Check if the text is a single emoji
+        // This regex matches exactly one emoji (including compound emojis like 👨‍👩‍👧‍👦 or 👨🏻‍💻)
+        const isEmoji =
+          /^(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)(?:\u200D(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F))*$/u;
+        if (isEmoji.test(raw)) {
+          msg.classList.add("emoji");
+        }
         msg.innerText = raw;
       }
       preview.appendChild(msg);
@@ -299,9 +306,25 @@
   }
 
   async function updatePreview(textarea) {
-    const preview = await getPreview(textarea.value);
     const existing = document.getElementById("preview");
+    // Store current scroll position
+    const scrollTop = existing.scrollTop;
+    const scrollHeight = existing.scrollHeight;
+    const clientHeight = existing.clientHeight;
+    const wasScrolledToBottom = scrollHeight - scrollTop === clientHeight;
+
+    const preview = await getPreview(textarea.value);
     existing.replaceWith(preview);
+
+    // Restore scroll position
+    if (wasScrolledToBottom) {
+      // If we were at the bottom, keep it at bottom
+      preview.scrollTop = preview.scrollHeight;
+    } else {
+      // Otherwise restore the previous position
+      preview.scrollTop = scrollTop;
+    }
+
     // save state in browser cache
     localStorage.setItem("chat-state", textarea.value);
   }
