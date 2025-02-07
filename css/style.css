@@ -252,11 +252,11 @@ ul#preview {
 }
 
 #preview li.media {
+    flex-shrink: 0;
+    width: 75%;
     line-height: 1;
     padding: 0;
-    overflow-x: hidden;
-    min-height: fit-content;
-    max-width: 75%;
+    overflow: clip;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
