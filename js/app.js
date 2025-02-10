@@ -150,7 +150,7 @@
       const response = await fetch("intro.json");
       if (response.ok) {
         const data = await response.json();
-        importChatFromJSON(data);
+        await importChatFromJSON(data);
       }
     } catch (error) {
       console.error("Error loading intro.json:", error);
@@ -167,7 +167,7 @@
         try {
           const text = await file.text();
           const data = JSON.parse(text);
-          importChatFromJSON(data);
+          await importChatFromJSON(data);
           alert("Chat backup restored successfully");
         } catch (error) {
           console.error("Error importing chat:", error);
@@ -437,7 +437,7 @@
 
     // load default chat if empty
     if (!textarea.value) {
-      importDefaultChat();
+      await importDefaultChat();
     }
 
     async function handleAvatarClick() {
