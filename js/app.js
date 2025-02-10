@@ -294,7 +294,7 @@
   async function getMediaUrl(id) {
     let url;
     try {
-      const blob = await getMedia(value);
+      const blob = await getMedia(id);
       url = URL.createObjectURL(blob);
     } catch (error) {
       url = id;
