@@ -291,6 +291,17 @@
     avatarElement.src = imageUrl;
   }
 
+  async function getMediaUrl(id) {
+    let url;
+    try {
+      const blob = await getMedia(value);
+      url = URL.createObjectURL(blob);
+    } catch (error) {
+      url = id;
+    }
+    return url;
+  }
+
   async function getPreview(text) {
     const preview = document.createElement("ul");
     preview.id = "preview";
@@ -306,21 +317,18 @@
       if (match) {
         const [_, type, value] = match;
         let el;
-        let url;
         switch (type) {
           case "image":
             msg.classList.add("media");
-            url = URL.createObjectURL(await getMedia(value));
             el = document.createElement("img");
-            el.src = url;
+            el.src = await getMediaUrl(value);
             msg.appendChild(el);
             break;
 
           case "video":
             msg.classList.add("media");
-            url = URL.createObjectURL(await getMedia(value));
             el = document.createElement("video");
-            el.src = url;
+            el.src = await getMediaUrl(value);
             el.controls = true;
             msg.appendChild(el);
             break;
@@ -330,13 +338,12 @@
             break;
 
           case "status":
-            url = updateStatus(value);
+            updateStatus(value);
             break;
 
           case "dp":
           case "DP":
-            url = URL.createObjectURL(await getMedia(value));
-            updateAvatar(url);
+            updateAvatar(await getMediaUrl(value));
             break;
 
           default:
